@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Picfol</string>
+    <drawable name="splashScreenIcon">@drawable/icon_splashscreen2</drawable>
 </resources>

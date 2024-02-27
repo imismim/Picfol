@@ -1,6 +1,10 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
+
+
 }
 
 android {
@@ -36,6 +40,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
     buildFeatures {
         compose = true
     }
@@ -66,5 +71,26 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation("androidx.core:core-splashscreen:1.0.0")
+
+
+//    implementation("androidx.core:core-splashscreen:1.2.0")
+
+
+    //Navigation
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+
+    implementation("com.google.dagger:hilt-android:2.49")
+    kapt("com.google.dagger:hilt-android-compiler:2.49")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    kapt("androidx.hilt:hilt-compiler:1.2.0")
+
+
+
+
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
