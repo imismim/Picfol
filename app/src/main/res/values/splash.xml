@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="App.Staring.Theme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/DarkPurple</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splashScreenIcon</item>
+        <item name="postSplashScreenTheme">@style/Theme.Picfol</item>
+    </style>
+</resources>

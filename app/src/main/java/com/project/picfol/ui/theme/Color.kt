@@ -2,10 +2,11 @@ package com.project.picfol.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val DarkPurple = Color(45,33,49)
+val EnglishViolet = Color(104,72,112)
+val AfricanViolet = Color(162,111,174)
+val TimberWolf = Color(214,214,214)
+val CoolGray = Color(150,148,178)
+val UltraViolet = Color(86,82,142)
+val PinkLavender= Color(240,188,221)
+val Beige = Color(248,248,221)

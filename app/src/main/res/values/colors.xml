@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <color name="DarkPurple">#2D2131</color>
+    <color name="EnglishViolet">#684870</color>
+    <color name="AfricanViolet">#A26FAE</color>
+    <color name="TimberWolf">#D6D6D6</color>
+    <color name="CoolGray">#9694B2</color>
+    <color name="UltraViolet">#56528E</color>
+    <color name="PinkLavender">#F0BCDD</color>
+    <color name="Beige">#F8F8DD</color>
 </resources>
