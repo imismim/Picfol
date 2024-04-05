@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Picfol</string>
+    <string name="hide_password">Hide value</string>
+    <string name="show_password">Show value</string>
+    <string name="signup_button">Sign Up</string>
+    <string name="signin_button_text">Log in</string>
     <drawable name="splashScreenIcon">@drawable/icon_splashscreen2</drawable>
 </resources>

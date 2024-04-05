@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "318710694742",
+    "project_id": "picfol",
+    "storage_bucket": "picfol.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:318710694742:android:0db6c3bace31add4308cf7",
+        "android_client_info": {
+          "package_name": "com.project.picfol"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApALcDz16Z2Gfc3upd3wOQ4frPXCFvn2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
