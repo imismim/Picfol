@@ -38,7 +38,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(
-    viewModel: SignUpViewModel = hiltViewModel(),
     navController: NavController
 ) {
     Surface(
@@ -59,7 +58,6 @@ fun SignUpScreen(
             var password = rememberSaveable { mutableStateOf("4545") }
             val scope = rememberCoroutineScope()
             val context = LocalContext.current
-            val state = viewModel.signUpState.collectAsState(initial = null)
 
 
             Spacer(modifier = Modifier.height(100.dp))
@@ -73,9 +71,7 @@ fun SignUpScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
             ButtonComponent(value = stringResource(id = R.string.signup_button)) {
-                scope.launch {
-                    viewModel.signUpUser(email.value, password.value)
-                }
+                TODO("Doing registration")
             }
             Spacer(modifier = Modifier.height(10.dp))
             ClickableText(
@@ -87,23 +83,7 @@ fun SignUpScreen(
             DivideLine()
 
             Spacer(modifier = Modifier.height(50.dp))
-            GoogleFacebookIcon({ TODO("Do google sign up") }, { TODO("Do acebook sign up") })
-
-            LaunchedEffect(key1 = state.value?.isError?.isNotEmpty(), key2 = state.value?.isSuccess?.isNotEmpty()) {
-                scope.launch {
-                    if (state.value?.isError?.isNotEmpty() == true) {
-                        val error = state.value?.isError
-                        Toast.makeText(
-                            context,
-                            "${error} ${email.value}, ${password.value}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    } else if (state.value?.isSuccess?.isNotEmpty() == true) {
-                        Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
-                        navController.navigate(route = Routes.PicfolApp.route)
-                    }
-                }
-            }
+            GoogleFacebookIcon({ TODO("Do google sign up") }, { TODO("Do facebook sign up") })
         }
     }
 }

@@ -12,7 +12,20 @@
           "package_name": "com.project.picfol"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "318710694742-geh6ufoc5147h7fq09fu17v42ggn06nj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.picfol",
+            "certificate_hash": "fdcc5907a17e9f11f68085faa6f5ffe6ae1743f7"
+          }
+        },
+        {
+          "client_id": "318710694742-nd7aphlm8uqbctuda1j62t40vheeg4nr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyApALcDz16Z2Gfc3upd3wOQ4frPXCFvn2s"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "318710694742-dvcns4kuagrs0spg5vor5suunrg57rav.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

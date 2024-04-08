@@ -1,6 +1,9 @@
 package com.project.picfol.app.SignUpSigIn.presentation.SignIn
 
+
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,8 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.GoogleAuthProvider
 import com.project.picfol.R
 import com.project.picfol.app.NavGraph.Routes
 import com.project.picfol.app.SignUpSigIn.presentation.components.ButtonComponent
@@ -37,9 +45,26 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreen(
-    viewModel: SignInViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    state: SignInState,
+    onSignInClickGoogle: () -> Unit
 ) {
+    val email = rememberSaveable { mutableStateOf("") }
+    val password = rememberSaveable { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = state.signInError) {
+        state.signInError?.let { error ->
+            Toast.makeText(
+                context,
+                error,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+    }
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -52,13 +77,6 @@ fun SignInScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            var email = rememberSaveable { mutableStateOf("") }
-            var password = rememberSaveable { mutableStateOf("") }
-            val scope = rememberCoroutineScope()
-            val context = LocalContext.current
-            val state = viewModel.signInState.collectAsState(initial = null)
-
-
             Spacer(modifier = Modifier.height(100.dp))
             HeadingText("Log in")
             Spacer(modifier = Modifier.height(8.dp))
@@ -69,9 +87,7 @@ fun SignInScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
             ButtonComponent(value = stringResource(id = R.string.signin_button_text)) {
-                scope.launch {
-                    viewModel.loginUser(email.value, password.value)
-                }
+                TODO()
             }
             Spacer(modifier = Modifier.height(10.dp))
             ClickableText(
@@ -83,23 +99,10 @@ fun SignInScreen(
             DivideLine()
 
             Spacer(modifier = Modifier.height(50.dp))
-            GoogleFacebookIcon({ TODO("Do google sign up") }, { TODO("Do acebook sign up") })
 
-            LaunchedEffect(key1 = state.value?.isError?.isNotEmpty(),key2 = state.value?.isSuccess?.isNotEmpty()) {
-                scope.launch {
-                    if (state.value?.isError?.isNotEmpty() == true) {
-                        val error = state.value?.isError
-                        Toast.makeText(
-                            context,
-                            "${error} ${email.value}, ${password.value}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    } else if (state.value?.isSuccess?.isNotEmpty() == true) {
-                        Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
-                        navController.navigate(route = Routes.PicfolApp.route)
-                    }
-                }
-            }
+            GoogleFacebookIcon(googleClick = onSignInClickGoogle) { TODO("Do facebook sign up") }
+
+
         }
     }
 }

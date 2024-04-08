@@ -1,36 +1,22 @@
 package com.project.picfol.app.SignUpSigIn.presentation.SignIn
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.project.picfol.app.SignUpSigIn.data.AuthRepository
-import com.project.picfol.app.SignUpSigIn.data.Resource
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
-import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
-@HiltViewModel
-class SignInViewModel @Inject constructor(
-    private val repository: AuthRepository
-) : ViewModel() {
-    val _signInState = Channel<SignInState>()
-    val signInState = _signInState.receiveAsFlow()
+class SignInViewModel: ViewModel() {
+    private val _state = MutableStateFlow(SignInState())
+    val state = _state.asStateFlow()
 
-    fun loginUser(email: String, password: String) = viewModelScope.launch {
-        repository.loginUser(email, password).collect { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _signInState.send(SignInState(isSuccess = "Sign In Success"))                }
+    fun onSignInResult(result: SignInResult){
+        _state.update { it.copy(
+            isSignInSuccess = result.data != null,
+            signInError = result.errorMessage
+        ) }
+    }
 
-                is Resource.Loading -> {
-                    _signInState.send(SignInState(isLoading = true))
-                }
-
-                is Resource.Error -> {
-                    _signInState.send(SignInState(isError = result.message))
-                }
-            }
-        }
+    fun resetState() {
+        _state.update { SignInState() }
     }
 }

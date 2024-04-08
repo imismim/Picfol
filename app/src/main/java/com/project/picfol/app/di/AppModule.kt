@@ -7,8 +7,6 @@ import com.project.picfol.app.DataStorePreferences.domain.manger.LocalUserManger
 import com.project.picfol.app.DataStorePreferences.domain.usevases.AppEntryUseCases
 import com.project.picfol.app.DataStorePreferences.domain.usevases.ReadAppEntry
 import com.project.picfol.app.DataStorePreferences.domain.usevases.SaveAppEntry
-import com.project.picfol.app.SignUpSigIn.data.AuthRepository
-import com.project.picfol.app.SignUpSigIn.data.AuthRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,15 +16,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    @Provides
-    @Singleton
-    fun providesFirebaseAuth() = FirebaseAuth.getInstance()
 
-    @Provides
-    @Singleton
-    fun providesRepositoryImpl(firebaseAuth: FirebaseAuth): AuthRepository {
-        return AuthRepositoryImpl(firebaseAuth)
-    }
 
 
     @Provides
