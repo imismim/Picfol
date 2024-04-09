@@ -5,8 +5,6 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("com.google.relay")
     id("com.google.gms.google-services")
-
-
 }
 
 android {
