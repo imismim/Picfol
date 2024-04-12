@@ -35,14 +35,14 @@ class GoogleAuthUiClient(
         return result?.pendingIntent?.intentSender
     }
 
-    suspend fun signInWithIntent(intent: Intent): SignInResult {
+    suspend fun signInWithIntent(intent: Intent): SignResult {
         val credential = oneTapClient.getSignInCredentialFromIntent(intent)
         val googleIdToken = credential.googleIdToken
         val googleCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
         return try {
             val user = auth.signInWithCredential(googleCredential).await().user
-            SignInResult(
-                data = user?.run{
+            SignResult(
+                data = user?.run {
                     UserData(
                         userId = uid,
                         userName = displayName,
@@ -51,21 +51,67 @@ class GoogleAuthUiClient(
                 },
                 errorMessage = null
             )
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
-            SignInResult(
+            SignResult(
                 data = null,
                 errorMessage = e.message
             )
         }
     }
 
-    suspend fun signOut(){
+    suspend fun signUpWithEmailAndPassword(email: String, password: String): SignResult {
+        return try {
+            val user = auth.createUserWithEmailAndPassword(email, password).await().user
+            SignResult(
+                data = user?.run {
+                    UserData(
+                        userId = uid,
+                        userName = displayName,
+                        profilePictureUrl = photoUrl?.toString()
+                    )
+                },
+                errorMessage = null
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is CancellationException) throw e
+            SignResult(
+                data = null,
+                errorMessage = e.message
+            )
+        }
+    }
+
+    suspend fun signInWithEmailAndPassword(email: String, password: String): SignResult {
+        return try {
+            val user = auth.signInWithEmailAndPassword(email, password).await().user
+            SignResult(
+                data = user?.run {
+                    UserData(
+                        userId = uid,
+                        userName = displayName,
+                        profilePictureUrl = photoUrl?.toString()
+                    )
+                },
+                errorMessage = null
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            if (e is CancellationException) throw e
+            SignResult(
+                data = null,
+                errorMessage = e.message
+            )
+        }
+    }
+
+    suspend fun signOut() {
         try {
             oneTapClient.signOut().await()
             auth.signOut()
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             if (e is CancellationException) throw e
         }
@@ -73,11 +119,12 @@ class GoogleAuthUiClient(
 
     fun getSignIdUser(): UserData? = auth.currentUser?.run {
         UserData(
-            userId= uid,
+            userId = uid,
             userName = displayName,
             profilePictureUrl = photoUrl?.toString()
         )
     }
+
     private fun buildSignInRequest(): BeginSignInRequest {
         return BeginSignInRequest.Builder().setGoogleIdTokenRequestOptions(
             GoogleIdTokenRequestOptions.builder()

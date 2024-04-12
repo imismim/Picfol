@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.project.picfol.R
 import com.project.picfol.app.NavGraph.Routes
+import com.project.picfol.app.SignUpSigIn.presentation.SignState
 import com.project.picfol.app.SignUpSigIn.presentation.components.ButtonComponent
 import com.project.picfol.app.SignUpSigIn.presentation.components.CheckBoxComponent
 import com.project.picfol.app.SignUpSigIn.presentation.components.ClickableText
@@ -38,8 +39,26 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpScreen(
-    navController: NavController
+    navController: NavController,
+    state: SignState,
+    onSignInClickGoogle: () -> Unit,
+    onSignUpWithEmailAndPassword: (String, String) -> Unit
 ) {
+    val name = rememberSaveable { mutableStateOf("14") }
+    val email = rememberSaveable { mutableStateOf("imismims@gmail.com") }
+    val password = rememberSaveable { mutableStateOf("4545") }
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = state.signInError) {
+        state.signInError?.let { error ->
+            Toast.makeText(
+                context,
+                error,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -53,13 +72,6 @@ fun SignUpScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            var name = rememberSaveable { mutableStateOf("14") }
-            var email = rememberSaveable { mutableStateOf("imismims@gmail.com") }
-            var password = rememberSaveable { mutableStateOf("4545") }
-            val scope = rememberCoroutineScope()
-            val context = LocalContext.current
-
-
             Spacer(modifier = Modifier.height(100.dp))
             HeadingText("Create an Account")
             TextField(name, labelValue = "name", R.drawable.email_icon)
@@ -71,7 +83,7 @@ fun SignUpScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
             ButtonComponent(value = stringResource(id = R.string.signup_button)) {
-                TODO("Doing registration")
+                onSignUpWithEmailAndPassword(email.value, password.value)
             }
             Spacer(modifier = Modifier.height(10.dp))
             ClickableText(
@@ -83,14 +95,9 @@ fun SignUpScreen(
             DivideLine()
 
             Spacer(modifier = Modifier.height(50.dp))
-            GoogleFacebookIcon({ TODO("Do google sign up") }, { TODO("Do facebook sign up") })
+            GoogleFacebookIcon(googleClick = onSignInClickGoogle, { TODO("Do facebook sign up") })
         }
     }
 }
 
 
-//@Preview
-//@Composable
-//fun PrevSignUpScreen() {
-//    SignUpScreen()
-//}

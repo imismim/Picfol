@@ -29,6 +29,7 @@ import com.project.picfol.app.SignUpSigIn.presentation.GoogleAuthUiClient
 import com.project.picfol.app.SignUpSigIn.presentation.SignIn.SignInScreen
 import com.project.picfol.app.SignUpSigIn.presentation.SignIn.SignInViewModel
 import com.project.picfol.app.SignUpSigIn.presentation.SignUp.SignUpScreen
+import com.project.picfol.app.SignUpSigIn.presentation.SignUp.SignUpViewModel
 import com.project.picfol.app.Welcome.presentation.WelcomeScreen
 import com.project.picfol.app.Welcome.presentation.WelcomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,9 +43,12 @@ class MainActivity : ComponentActivity() {
     private val googleAuthUiClient by lazy {
         GoogleAuthUiClient(
             context = applicationContext,
-            oneTapClient = com.google.android.gms.auth.api.identity.Identity.getSignInClient(applicationContext)
+            oneTapClient = com.google.android.gms.auth.api.identity.Identity.getSignInClient(
+                applicationContext
+            )
         )
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -76,14 +80,74 @@ class MainActivity : ComponentActivity() {
                     startDestination = Routes.SignInScreen.route
                 ) {
                     composable(route = Routes.SignUpScreen.route) {
-                        SignUpScreen(navController = navController)
+                        val viewModel = viewModel<SignUpViewModel>()
+                        val state by viewModel.state.collectAsStateWithLifecycle()
+
+                        LaunchedEffect(key1 = Unit) {
+                            if (googleAuthUiClient.getSignIdUser() != null) {
+                                navController.navigate(Routes.PicfolApp.route)
+                            }
+                        }
+                        val launcher =
+                            rememberLauncherForActivityResult(
+                                contract = ActivityResultContracts.StartIntentSenderForResult(),
+                                onResult = { result ->
+                                    if (result.resultCode == RESULT_OK) {
+                                        lifecycleScope.launch {
+                                            val signInResult = googleAuthUiClient.signInWithIntent(
+                                                intent = result.data ?: return@launch
+                                            )
+                                            viewModel.onSignUpResult(signInResult)
+                                        }
+                                    }
+                                }
+                            )
+
+                        LaunchedEffect(key1 = state.isSignInSuccess) {
+                            if (state.isSignInSuccess) {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Sign in success",
+                                    Toast.LENGTH_LONG
+                                ).show()
+
+                                navController.navigate(Routes.PicfolApp.route)
+                                viewModel.resetState()
+                            }
+                        }
+
+                        SignUpScreen(
+                            navController = navController,
+                            state = state,
+                            onSignInClickGoogle = {
+                                lifecycleScope.launch {
+                                    val signInIntentSender = googleAuthUiClient.signIn()
+                                    launcher.launch(
+                                        IntentSenderRequest.Builder(
+                                            signInIntentSender ?: return@launch
+                                        ).build()
+                                    )
+                                }
+                            },
+                            onSignUpWithEmailAndPassword = { email, password ->
+                                lifecycleScope.launch {
+                                    val signUpResult =
+                                        googleAuthUiClient.signUpWithEmailAndPassword(
+                                            email,
+                                            password
+                                        )
+                                    viewModel.onSignUpResult(signUpResult)
+                                }
+                            })
+
                     }
+
                     composable(route = Routes.SignInScreen.route) {
                         val viewModel = viewModel<SignInViewModel>()
                         val state by viewModel.state.collectAsStateWithLifecycle()
 
                         LaunchedEffect(key1 = Unit) {
-                            if(googleAuthUiClient.getSignIdUser() != null){
+                            if (googleAuthUiClient.getSignIdUser() != null) {
                                 navController.navigate(Routes.PicfolApp.route)
                             }
                         }
@@ -103,7 +167,7 @@ class MainActivity : ComponentActivity() {
                             )
 
                         LaunchedEffect(key1 = state.isSignInSuccess) {
-                            if (state.isSignInSuccess){
+                            if (state.isSignInSuccess) {
                                 Toast.makeText(
                                     applicationContext,
                                     "Sign in success",
@@ -127,35 +191,46 @@ class MainActivity : ComponentActivity() {
                                         ).build()
                                     )
                                 }
-                            })
-                    }
-                }
-
-                navigation(
-                    route = Routes.PicfolApp.route,
-                    startDestination = Routes.ProfileScreen.route
-                ) {
-                    composable(route = Routes.ProfileScreen.route) {
-                        ProfileScreen(
-                            userData = googleAuthUiClient.getSignIdUser(),
-                            onSignOut = {
+                            },
+                            onSignInWithEmailAndPassword = { email, password ->
                                 lifecycleScope.launch {
-                                    googleAuthUiClient.signOut()
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Sign out",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                    navController.popBackStack()
+                                    val signInResult =
+                                        googleAuthUiClient.signInWithEmailAndPassword(
+                                            email,
+                                            password
+                                        )
+                                    viewModel.onSignInResult(signInResult)
                                 }
-
                             }
                         )
+                    }
 
+                    navigation(
+                        route = Routes.PicfolApp.route,
+                        startDestination = Routes.ProfileScreen.route
+                    ) {
+                        composable(route = Routes.ProfileScreen.route) {
+                            ProfileScreen(
+                                userData = googleAuthUiClient.getSignIdUser(),
+                                onSignOut = {
+                                    lifecycleScope.launch {
+                                        googleAuthUiClient.signOut()
+                                        Toast.makeText(
+                                            applicationContext,
+                                            "Sign out",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        navController.popBackStack()
+                                    }
+
+                                }
+                            )
+
+                        }
                     }
                 }
-            }
 
+            }
         }
     }
 }

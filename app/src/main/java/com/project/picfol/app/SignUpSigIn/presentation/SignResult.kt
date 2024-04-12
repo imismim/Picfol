@@ -1,6 +1,6 @@
 package com.project.picfol.app.SignUpSigIn.presentation
 
-data class SignInResult (
+data class SignResult (
     val data: UserData?,
     val errorMessage: String?
 )

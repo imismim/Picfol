@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.project.picfol.R
 import com.project.picfol.app.NavGraph.Routes
-import com.project.picfol.app.SignUpSigIn.presentation.SignInState
+import com.project.picfol.app.SignUpSigIn.presentation.SignState
 import com.project.picfol.app.SignUpSigIn.presentation.components.ButtonComponent
 import com.project.picfol.app.SignUpSigIn.presentation.components.CheckBoxComponent
 import com.project.picfol.app.SignUpSigIn.presentation.components.ClickableText
@@ -37,8 +37,9 @@ import com.project.picfol.ui.theme.DarkPurple
 @Composable
 fun SignInScreen(
     navController: NavController,
-    state: SignInState,
-    onSignInClickGoogle: () -> Unit
+    state: SignState,
+    onSignInClickGoogle: () -> Unit,
+    onSignInWithEmailAndPassword: (String, String) -> Unit
 ) {
     val email = rememberSaveable { mutableStateOf("") }
     val password = rememberSaveable { mutableStateOf("") }
@@ -78,7 +79,7 @@ fun SignInScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
             ButtonComponent(value = stringResource(id = R.string.signin_button_text)) {
-                TODO()
+                onSignInWithEmailAndPassword(email.value, password.value)
             }
             Spacer(modifier = Modifier.height(10.dp))
             ClickableText(
