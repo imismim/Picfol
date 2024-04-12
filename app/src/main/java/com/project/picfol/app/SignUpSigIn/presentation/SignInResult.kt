@@ -1,4 +1,4 @@
-package com.project.picfol.app.SignUpSigIn.presentation.SignIn
+package com.project.picfol.app.SignUpSigIn.presentation
 
 data class SignInResult (
     val data: UserData?,

@@ -1,4 +1,4 @@
-package com.project.picfol.app.SignUpSigIn.presentation.SignIn
+package com.project.picfol.app.SignUpSigIn.presentation.SignUp
 
 import androidx.lifecycle.ViewModel
 import com.project.picfol.app.SignUpSigIn.presentation.SignInResult
@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class SignInViewModel: ViewModel() {
+class SignUpViewModel: ViewModel() {
     private val _state = MutableStateFlow(SignInState())
     val state = _state.asStateFlow()
 
